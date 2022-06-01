@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Neos in JS</title>
+		
+		<link rel="stylesheet" href="testPage.css">
+		<link rel="stylesheet" href="neos/uix.css">
+	</head>
+	<body>
+		<input id="filePicker" type="file">
+		<button id="loadBtn">Load JSON File</button><br>
+		<br>
+		<input id="neosLinkInput" type="text" placeholder="Paste your neosDB link here" size="50">
+		<button id="loadLinkBtn">Load From Link</button><br>
+		<br>
+		<div id="neosWindow">
+			<!-- Neos injects here -->
+		</div>
+		<br>
+		<button id="inspectorBtn">Open Inspector</button>
+		
+		<script src="lib/three.js"></script>
+		<script src="lib/CSS3DRenderer.js"></script>
+		<script src="neos/essentials.js"></script>
+		<script type="module" src="neos/components.js"></script>
+		<script src="neos/objectLoader.js"></script>
+		<script src="testPage.js"></script>
+	</body>
+</html>
