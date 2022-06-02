@@ -9,16 +9,16 @@ neos.components["FrooxEngine.ValueDriver`1"] = class ValueDriver extends Compone
 		"persistent": "System.Boolean",
 		"UpdateOrder": "System.Int32",
 		"Enabled": "System.Boolean",
-		"Source": "FrooxEngine.IField`1[[{T0}]]",
-		"Target": "FrooxEngine.IField`1[[{T0}]]"
+		"ValueSource": "FrooxEngine.IField`1[[{T0}]]",
+		"DriveTarget": "FrooxEngine.IField`1[[{T0}]]"
 	}
 	
 	update() {
 		if (!this.Fields.Enabled.Data) {
 			return;
 		}
-		let targetField = getFromRefID(this.Fields["Target"].Data);
-		let sourceField = getFromRefID(this.Fields["Source"].Data);
+		let targetField = getFromRefID(this.Fields["DriveTarget"].Data);
+		let sourceField = getFromRefID(this.Fields["ValueSource"].Data);
 		// only do anything if we have a target
 		if (targetField && sourceField) {
 			setField(targetField, sourceField.Data);
@@ -27,10 +27,10 @@ neos.components["FrooxEngine.ValueDriver`1"] = class ValueDriver extends Compone
 	
 	destroy() {
 		// un-drive the target
-		getFromRefID(this.Fields["Target"].Data).driven = false;
+		getFromRefID(this.Fields["DriveTarget"].Data).driven = false;
 	}
 	
-	targetChanged(newValue, oldValue) {
+	driveTargetChanged(newValue, oldValue) {
 		// un-drive old value
 		if (getFromRefID(oldValue)) {
 			getFromRefID(oldValue).driven = false;
@@ -38,23 +38,15 @@ neos.components["FrooxEngine.ValueDriver`1"] = class ValueDriver extends Compone
 		if (getFromRefID(newValue)) {
 			// only accept the new target if it's not driven yet
 			if (getFromRefID(newValue).driven) {
-				this.Fields["Target"].Data = "ID0";
+				this.Fields["DriveTarget"].Data = "ID0";
 				return;
 			}
 			getFromRefID(newValue).driven = true;
 		}
 	}
 	
-	writeBackChanged(newValue) {
-		// start tracking the last value that the target was.
-		if (newValue) {
-			this.lastTargetValue = targetField.Data;
-		}
-	}
-	
 	initOnSetEvents() {
 		super.initOnSetEvents();
-		this.Fields.Target.OnSet = [this.targetChanged.bind(this)];
-		this.Fields.WriteBack.OnSet = [this.writeBackChanged.bind(this)];
+		this.Fields.DriveTarget.OnSet = [this.driveTargetChanged.bind(this)];
 	}
 }
